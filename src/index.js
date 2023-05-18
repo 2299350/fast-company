@@ -1,14 +1,13 @@
+import App from "./App";
 import React from "react";
-import { createRoot } from 'react-dom/client';
-import reportWebVitals from './reportWebVitals';
-import "bootstrap/dist/css/bootstrap.css"
-import Users from "./components/users";
+import { createRoot } from "react-dom/client";
+import reportWebVitals from "./reportWebVitals";
+import "bootstrap/dist/css/bootstrap.css";
 
 
 
-const App = () => {
-  return <Users />;
-}
+
+
 
 const rootDir = document.getElementById('root');
 const root = createRoot(rootDir);

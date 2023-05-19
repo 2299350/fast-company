@@ -1,7 +1,7 @@
 import Bookmark from "./bookmark";
 import Quality from "./quality";
 
-const User = ({ user, onDelete, onBookmark, isFavorite }) => {
+const User = ({ user, onDelete, onBookmark }) => {
   return (
     <>
       <tr key={user._id}>
@@ -14,7 +14,7 @@ const User = ({ user, onDelete, onBookmark, isFavorite }) => {
         <td>{user.rate + "/5"}</td>
         <td>
           <Bookmark
-            isFavorite={isFavorite}
+            user={user}
             onBookmark={() => {
               onBookmark(user._id);
             }}

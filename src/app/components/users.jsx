@@ -9,8 +9,6 @@ import SearchStatus from "./searchStarus";
 
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll());
-  const [bookmarks, setBookmarks] = useState({});
-  console.log(bookmarks);
   const renderUsers = () => {
     return users.map((user) => (
       <User
@@ -18,7 +16,6 @@ const Users = () => {
         user={user}
         onDelete={handleDelete}
         onBookmark={() => handleBookmark(user._id)}
-        isFavorite={bookmarks[user._id] ?? false}
       />
     ));
   };
@@ -28,11 +25,12 @@ const Users = () => {
   };
 
   const handleBookmark = (userId) => {
-    setBookmarks((prevState) => {
-      return {
-        ...prevState,
-        [userId]: !prevState[userId],
-      };
+    setUsers((prevState) => {
+      return prevState.map((user) => {
+        return user._id === userId
+          ? { ...user, bookmark: !user.bookmark }
+          : user;
+      });
     });
   };
 

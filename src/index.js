@@ -4,12 +4,7 @@ import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.css";
 
-
-
-
-
-
-const rootDir = document.getElementById('root');
+const rootDir = document.getElementById("root");
 const root = createRoot(rootDir);
 root.render(<App />);
 

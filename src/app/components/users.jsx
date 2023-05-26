@@ -1,7 +1,7 @@
 // https://getbootstrap.com/docs/5.1/content/tables/
 // https://getbootstrap.com/docs/5.1/components/badge/
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../api";
 import User from "./user";
 import SearchStatus from "./searchStarus";
@@ -14,6 +14,12 @@ const Users = () => {
     const count = users.length;
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        if (users.length <= (currentPage - 1) * pageSize && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    }, [users.length, currentPage, pageSize]);
 
     const userCrop = paginate(users, currentPage, pageSize);
 

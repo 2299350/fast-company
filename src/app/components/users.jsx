@@ -1,38 +1,61 @@
 import React, { useState, useEffect } from "react";
-import api from "../api";
+import professionsApi from "../api/fake.api/professions.api";
+import userApi from "../api/fake.api/user.api";
 import User from "./user";
-import SearchStatus from "./searchStarus";
+import SearchStatus from "./searchStatus";
 import Pagination from "./pagination";
 import { paginate } from "../utils/paginate";
 import GroupList from "./groupList";
 
 const Users = () => {
-    const [users, setUsers] = useState(api.users.fetchAll());
+    const [users, setUsers] = useState([]);
     const pageSize = 2;
     const [currentPage, setCurrentPage] = useState(1);
-    const [professions, setProfessions] = useState();
-    const [selectedProf, setSelectedProf] = useState();
-
-    const filteredUsers = selectedProf
-        ? users.filter((user) => user.profession._id === selectedProf._id)
-        : users;
+    const [professions, setProfessions] = useState([]);
+    const [selectedProf, setSelectedProf] = useState(null);
 
     useEffect(() => {
-        if (
-            filteredUsers.length <= (currentPage - 1) * pageSize &&
-            currentPage > 1
-        ) {
-            setCurrentPage(currentPage - 1);
-        }
-    }, [filteredUsers.length, currentPage, pageSize]);
-
-    useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfessions(data));
+        professionsApi.fetchAll().then((data) => setProfessions(data));
+        userApi.fetchAll().then((data) => setUsers(data));
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
+
+    const handleDelete = (userId) => {
+        setUsers((prevState) =>
+            prevState.filter((user) => user._id !== userId)
+        );
+    };
+
+    const handleBookmark = (userId) => {
+        setUsers((prevState) =>
+            prevState.map((user) =>
+                user._id === userId
+                    ? { ...user, bookmark: !user.bookmark }
+                    : user
+            )
+        );
+    };
+
+    const handlePageChange = (pageIndex) => {
+        setCurrentPage(pageIndex);
+    };
+
+    const handleProfessionSelect = (profession) => {
+        setSelectedProf(profession);
+        setCurrentPage(1);
+    };
+
+    const clearFilter = () => {
+        setSelectedProf(null);
+        setCurrentPage(1);
+    };
+
+    const filteredUsers = selectedProf
+        ? users.filter((user) => user.profession._id === selectedProf._id)
+        : users;
 
     const userCrop = paginate(filteredUsers, currentPage, pageSize);
 
@@ -42,37 +65,9 @@ const Users = () => {
                 key={user._id}
                 user={user}
                 onDelete={handleDelete}
-                onBookmark={() => handleBookmark(user._id)}
+                onBookmark={handleBookmark}
             />
         ));
-    };
-
-    const handleDelete = (userId) => {
-        setUsers((prevState) =>
-            prevState.filter((user) => user._id !== userId)
-        );
-    };
-
-    const handleBookmark = (userId) => {
-        setUsers((prevState) => {
-            return prevState.map((user) => {
-                return user._id === userId
-                    ? { ...user, bookmark: !user.bookmark }
-                    : user;
-            });
-        });
-    };
-
-    const handlePageChange = (pageIndex) => {
-        setCurrentPage(pageIndex);
-    };
-
-    const handleProffessionSelect = (item) => {
-        setSelectedProf(item);
-    };
-
-    const clearFilter = () => {
-        setSelectedProf();
     };
 
     return (
@@ -84,7 +79,7 @@ const Users = () => {
                             <GroupList
                                 items={professions}
                                 selectedItem={selectedProf}
-                                onItemSelect={handleProffessionSelect}
+                                onItemSelect={handleProfessionSelect}
                                 valueProperty="_id"
                                 contentProperty="name"
                             />

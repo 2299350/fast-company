@@ -6,13 +6,15 @@ import Pagination from "./pagination";
 import { paginate } from "../utils/paginate";
 import GroupList from "./groupList";
 import UsersTable from "./usersTable";
+import _ from "lodash";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
-    const pageSize = 2;
+    const pageSize = 8;
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfessions] = useState([]);
     const [selectedProf, setSelectedProf] = useState(null);
+    const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
 
     useEffect(() => {
         professionsApi.fetchAll().then((data) => setProfessions(data));
@@ -43,6 +45,17 @@ const Users = () => {
         setCurrentPage(1);
     };
 
+    const handleSort = (item) => {
+        if (sortBy.iter === item) {
+            setSortBy((prevState) => ({
+                ...prevState,
+                order: prevState.order === "asc" ? "desc" : "asc"
+            }));
+        } else {
+            setSortBy({ iter: item, order: "asc" });
+        }
+    };
+
     const clearFilter = () => {
         setSelectedProf(null);
         setCurrentPage(1);
@@ -52,7 +65,8 @@ const Users = () => {
         ? users.filter((user) => user.profession._id === selectedProf._id)
         : users;
 
-    const userCrop = paginate(filteredUsers, currentPage, pageSize);
+    const sortedUsers = _.orderBy(filteredUsers, [sortBy.iter], [sortBy.order]);
+    const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
     useEffect(() => {
         if (userCrop.length === 0 && currentPage > 1) {
@@ -90,6 +104,7 @@ const Users = () => {
                             users={userCrop}
                             onDelete={handleDelete}
                             onBookmark={handleBookmark}
+                            onSort={handleSort}
                         />
                     )}
 

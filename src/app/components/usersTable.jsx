@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import User from "./user";
 
-const UsersTable = ({ users, onDelete, onBookmark }) => {
+const UsersTable = ({ users, onDelete, onBookmark, onSort }) => {
     const renderUsers = () => {
         return users.map((user) => (
             <User
@@ -18,12 +18,42 @@ const UsersTable = ({ users, onDelete, onBookmark }) => {
         <table className="table">
             <thead>
                 <tr>
-                    <th scope="col">Имя</th>
+                    <th
+                        role="button"
+                        onClick={() => onSort("name")}
+                        scope="col"
+                    >
+                        Имя
+                    </th>
                     <th scope="col">Качества</th>
-                    <th scope="col">Профессия</th>
-                    <th scope="col">Встретился, раз</th>
-                    <th scope="col">Оценка</th>
-                    <th scope="col">Избранное</th>
+                    <th
+                        role="button"
+                        onClick={() => onSort("profession.name")}
+                        scope="col"
+                    >
+                        Профессия
+                    </th>
+                    <th
+                        role="button"
+                        onClick={() => onSort("completedMeetings")}
+                        scope="col"
+                    >
+                        Встретился, раз
+                    </th>
+                    <th
+                        role="button"
+                        onClick={() => onSort("rate")}
+                        scope="col"
+                    >
+                        Оценка
+                    </th>
+                    <th
+                        role="button"
+                        onClick={() => onSort("bookmark")}
+                        scope="col"
+                    >
+                        Избранное
+                    </th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -35,7 +65,8 @@ const UsersTable = ({ users, onDelete, onBookmark }) => {
 UsersTable.propTypes = {
     users: PropTypes.array.isRequired,
     onDelete: PropTypes.func.isRequired,
-    onBookmark: PropTypes.func.isRequired
+    onBookmark: PropTypes.func.isRequired,
+    onSort: PropTypes.func.isRequired
 };
 
 export default UsersTable;

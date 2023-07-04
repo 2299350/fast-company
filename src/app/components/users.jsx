@@ -46,14 +46,7 @@ const Users = () => {
     };
 
     const handleSort = (item) => {
-        if (sortBy.iter === item) {
-            setSortBy((prevState) => ({
-                ...prevState,
-                order: prevState.order === "asc" ? "desc" : "asc"
-            }));
-        } else {
-            setSortBy({ iter: item, order: "asc" });
-        }
+        setSortBy(item);
     };
 
     const clearFilter = () => {
@@ -105,6 +98,7 @@ const Users = () => {
                             onDelete={handleDelete}
                             onBookmark={handleBookmark}
                             onSort={handleSort}
+                            selectedSort={sortBy}
                         />
                     )}
 
